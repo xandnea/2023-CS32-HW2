@@ -31,7 +31,7 @@ int evaluate(string infix, const Set& trueValues, const Set& falseValues, string
 
     char curr;
     char next;
-    bool parenthesis = true;
+    int parenthesis = 0;
 
     for (int i = 0; i < test.size(); i++) {
         curr = test[i];
@@ -40,7 +40,7 @@ int evaluate(string infix, const Set& trueValues, const Set& falseValues, string
         switch (curr) {
             case '(':
                 if (isalpha(next) || (next == '!') || (next == '(')) {
-                    parenthesis = !parenthesis;
+                    parenthesis++;
                     break;
                 }
                 else
@@ -49,7 +49,7 @@ int evaluate(string infix, const Set& trueValues, const Set& falseValues, string
                 if (isalpha(next) || (next == '!')) 
                     return 1;
                 else {
-                    parenthesis = !parenthesis;
+                    parenthesis--;
                     break;
                 }
             case '!':
@@ -71,7 +71,7 @@ int evaluate(string infix, const Set& trueValues, const Set& falseValues, string
         }
     }
     
-    if (!parenthesis) // if parenthesis is false (there is an odd # of parenthesis) then return 1
+    if (parenthesis != 0) // if parenthesis is not 0 (there is an uneven amount of open and closed parenthesis) then return 1
         return 1;
 
     for (int i = 0; i < alphas.size(); i++) {
@@ -206,6 +206,8 @@ int main()
     assert(evaluate("n t", trues, falses, pf, answer) == 1);
     assert(evaluate("nt", trues, falses, pf, answer) == 1);
     assert(evaluate("()", trues, falses, pf, answer) == 1);
+    assert(evaluate("((", trues, falses, pf, answer) == 1);
+    assert(evaluate("))", trues, falses, pf, answer) == 1);
     assert(evaluate("()z", trues, falses, pf, answer) == 1);
     assert(evaluate("y(n|y)", trues, falses, pf, answer) == 1);
     assert(evaluate("t(&n)", trues, falses, pf, answer) == 1);
